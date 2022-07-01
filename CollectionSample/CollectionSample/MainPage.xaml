@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:CollectionSample"
+             xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+             xmlns:tabviews="clr-namespace:CollectionSample.TabViews"
+             ios:Page.UseSafeArea="true"
+             x:Class="CollectionSample.MainPage">
+
+    <ContentPage.BindingContext>
+        <vm:MainPageViewModel />
+
+    </ContentPage.BindingContext>
+
+    <Grid RowDefinitions="50, *" RowSpacing="0">
+
+        <CollectionView x:Name="TabsView"
+                        Grid.Row="0"
+                        ItemsSource="{Binding Tabs}"
+                        ItemsUpdatingScrollMode="KeepItemsInView"
+                        ItemSizingStrategy="MeasureAllItems"
+                        SelectedItem="{Binding SelectedTab}"
+                        SelectionChangedCommand="{Binding Path=BindingContext.TabChangedCommand,
+                                                            Source={x:Reference TabsView}}"
+                        SelectionChangedCommandParameter="{Binding SelectedTab}"
+                        SelectionMode="Single">
+
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout Orientation="Horizontal"/>
+            </CollectionView.ItemsLayout>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid RowSpacing="0" RowDefinitions="*, Auto">
+
+                        <Label Grid.Row="0"
+                               Text="{Binding TabTitle}"
+                               TextColor="White"
+                               BackgroundColor="navy"
+                               Padding="20,0"
+                               VerticalTextAlignment="Center"
+                               HorizontalTextAlignment="Center"
+                               FontSize="12" />
+                        <BoxView Grid.Row="1"
+                                 Color="Yellow"
+                                 HeightRequest="4"
+                                 IsVisible="{Binding IsSelected}"/>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup Name="CommonStates">
+                                <VisualState Name="Normal"/>
+                                <VisualState Name="Selected">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="White" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                    </Grid>
+                </DataTemplate>
+
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <tabviews:ParentTabView Grid.Row="1" VerticalOptions="FillAndExpand" IsVisible="{Binding IsParentTabVisible}"/>
+        <tabviews:ChildTabView Grid.Row="1" VerticalOptions="FillAndExpand" IsVisible="{Binding IsChildTabVisible}"/>
+        <tabviews:ContactsTabView Grid.Row="1" VerticalOptions="FillAndExpand" IsVisible="{Binding IsContactsTabVisible}"/>
+
+    </Grid>
+</ContentPage>
+
